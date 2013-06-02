@@ -15,26 +15,25 @@ var DeviceModel = Model.extend({
     },
 
     parse: function(data) {
+        data.isDimmable = _.contains(data.methods, "DIM");
+        if(data.isDimmable) {
+            data.dimLevel = data.status.level
+        }
         data.status = data.status.status;
+
         return data;
     },
 
     turnOn: function () {
-        telldus.turnOn(this.attributes.id);
-        return {
-            status: "ok"
-        };
+        return telldus.turnOn(this.attributes.id);
     },
 
     turnOff: function () {
-        telldus.turnOff(this.attributes.id);
-        return {
-            status: "ok"
-        };
+        return telldus.turnOff(this.attributes.id);
     },
 
     dim: function (level) {
-        if(_.contains(this.attributes.methods, "DIM")) {
+        if(this.isDimmable()) {
             telldus.dim(this.attributes.id, level);
             return {
                 status: "ok"
@@ -45,6 +44,10 @@ var DeviceModel = Model.extend({
                 error: "not a dimmable device"
             };
         }
+    },
+
+    isDimmable: function() {
+        return this.attributes.isDimmable;
     },
 
     statusChangeHandler: function () {

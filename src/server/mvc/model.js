@@ -1,7 +1,7 @@
 var _ = require("underscore");
 
 var Model = function (device) {
-    this.attributes = this.parse(device);
+    this.attributes = this.parse.call(this, device);
 };
 
 _.extend(Model.prototype, {
