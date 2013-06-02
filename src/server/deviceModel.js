@@ -11,7 +11,8 @@ if(!settings.useMock) {
 var DeviceModel = Model.extend({
 
     events: {
-        "change:status": "statusChangeHandler"
+        "change:status": "statusChangeHandler",
+        "change:dimLevel": "dim"
     },
 
     parse: function(data) {
@@ -34,10 +35,7 @@ var DeviceModel = Model.extend({
 
     dim: function (level) {
         if(this.isDimmable()) {
-            telldus.dim(this.attributes.id, level);
-            return {
-                status: "ok"
-            };
+            return telldus.dim(this.attributes.id, level);
         } else {
             return {
                 status: "error",
