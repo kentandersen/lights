@@ -51,9 +51,9 @@ var DeviceModel = Model.extend({
 
         var status = this.attributes.status;
         if(status === "ON") {
-            return this.turnOff();
-        } else {
             return this.turnOn();
+        } else {
+            return this.turnOff();
         }
     },
 
