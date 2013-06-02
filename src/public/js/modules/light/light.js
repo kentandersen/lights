@@ -5,11 +5,14 @@ define(function(require) {
     var Light = Model.extend({
         
         defaults: {
-            "name": "",
-            "id":   null,
-            "model": "",
-            "type": "",
-            "element": null
+            id:     null,
+            name:   "",
+            status: "DIM",
+            model:  "",
+            type:   "",
+            isDimmable: false,
+            dimLevel: null
+            // "element": null
         },
 
         initialize: function(){
