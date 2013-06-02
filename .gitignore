@@ -1,0 +1,5 @@
+security
+node_modules
+build
+src/public/vendor/bootstrap
+config/appsettings.js
