@@ -53,6 +53,7 @@ define(function(require) {
         },
 
         dim: function(level, lightModel) {
+            level = parseInt(level, 10);
             if(lightModel) {
                 lightModel.save("dimLevel", level, {patch: true});
             }
