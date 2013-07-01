@@ -33,9 +33,9 @@ var DeviceModel = Model.extend({
         return telldus.turnOff(this.attributes.id);
     },
 
-    dim: function (level) {
+    dim: function () {
         if(this.isDimmable()) {
-            return telldus.dim(this.attributes.id, level);
+            return telldus.dim(this.attributes.id, this.attributes.dimLevel);
         } else {
             return {
                 status: "error",
@@ -56,7 +56,7 @@ var DeviceModel = Model.extend({
         } else {
             return this.turnOff();
         }
-    },
+    }
 
 });
 
