@@ -1,4 +1,4 @@
 lights
 ======
 
-Webinterface for controlling telldus remote switched
+Webinterface for controlling telldus remote switches
