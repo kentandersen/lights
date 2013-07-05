@@ -1,5 +1,39 @@
-li {
-    display: block;
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
+.lights  {
+    @backgroundPercentFromEdge: 3%;
+
+    margin: 10px 0 0 0;
+    padding: 0;
+
+    li {
+        display:        block;
+        border-bottom:  1px solid #ccc;
+
+        a {
+            background:         #fff;
+            color:              #555;
+            padding:            20px;
+            display:            block;
+            text-decoration:    none;
+
+            -webkit-transform: translate(0px, 0px);
+        }
+
+        &.lightOn {
+            background: url("../../images/lightOn.svg") no-repeat @backgroundPercentFromEdge center,
+                        url("../../images/lightOn.svg") no-repeat (100 - @backgroundPercentFromEdge) center;
+        }
+
+        &.lightOff {
+            background: url("../../images/lightOff.svg") no-repeat @backgroundPercentFromEdge center,
+                        url("../../images/lightOff.svg") no-repeat (100 - @backgroundPercentFromEdge) center;
+        }
+
+        &.animate {
+            a {
+                transition: -webkit-transform 0.3s ease-out;
+            }
+        }
+
+
+    }
 }
