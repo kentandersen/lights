@@ -28,7 +28,7 @@ define(function(require) {
 
     var App = require('modules/app/app');
 
-    var app = new App({ el: $("body") });
+    var app = new App({ el: $("#application") });
 
     app.addSections({
         "nav": "#nav",

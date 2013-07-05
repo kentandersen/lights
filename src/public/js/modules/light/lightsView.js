@@ -9,22 +9,30 @@ define(function(require) {
 
     var LightsView = View.extend({
 
+        options: {
+            dragThreshold: 40
+        },
+
         events: {
-            "click .on": "turnOn",
-            "click .off": "turnOff",
-            "change .dimLevel": "dimLevelChangeHandler",
-            "mousedown .dimLevel": "_markAsDirty",
-            "mouseup .dimLevel": "_removeMarkedAsDirty"
+            "mousedown a":      "mouseDownHandler",
+            "touchstart a":     "mouseDownHandler",
+            "webkitTransitionEnd li.animate": "animateEndHandler"
+
+            // "change .dimLevel": "dimLevelChangeHandler",
         },
 
         template: template,
 
+        className: "lights",
+
         tagName: "ul",
 
         initialize: function(options) {
+            _.bindAll(this, "mouseMoveHandler", "mouseUpHandler");
             this.lights = options.lights;
 
-            this.listenTo(this.lights, "sync", this.render, this);
+            this.listenToOnce(this.lights, "sync", this.render, this);
+            this.listenTo(this.lights, "change:status", this.statusChangeHandler, this);
 
             this.debounceDim = _.debounce(this.dim, 200);
         },
@@ -33,22 +41,22 @@ define(function(require) {
             if(this.isDirty) {return;}
 
             this.renderTemplate({
-                lights: this.lights.toJSON()
+                lights: this.lights.map(function(lightModel, index) {
+                    var data = lightModel.toJSON();
+                    data.isOn = lightModel.get("status") == "ON";
+                    return data;
+                })
             });
             return this;
         },
 
-        turnOn: function(event) {
-            var lightModel = this._getLightModel(event.currentTarget)
-            if(lightModel) {
-                lightModel.save("status", "ON", {patch: true});
-            }
-        },
-        
-        turnOff: function(event) {
-            var lightModel = this._getLightModel(event.currentTarget)
-            if(lightModel) {
-                lightModel.save("status", "OFF", {patch: true});
+        toggle: function($light, toggle) {
+            var lightModel = this._getLightModel($light)
+            var status = toggle ? "ON" : "OFF";
+
+
+            if(lightModel && lightModel.get("status") != status) {
+                lightModel.save("status", status, {patch: true});
             }
         },
 
@@ -57,6 +65,59 @@ define(function(require) {
             if(lightModel) {
                 lightModel.save("dimLevel", level, {patch: true});
             }
+        },
+
+        mouseDownHandler: function(event) {
+            var $element = $(event.currentTarget);
+
+            $("body").on("mousemove touchmove", {
+                dragStartX: event.targetTouches ? event.targetTouches[0].clientX : event.clientX,
+                element: $element, 
+            }, this.mouseMoveHandler);
+
+            $("body").on("mouseup touchend", {
+                element: $element
+            }, this.mouseUpHandler)
+            
+        },
+        
+        mouseUpHandler: function(event) {
+            var $element = event.data.element;
+
+            $element.closest("li").addClass("animate");
+
+            $("body").off("mousemove touchmove", this.mouseMoveHandler);
+            $("body").off("mouseup touchend", this.mouseUpHandler);
+            $element.css("transform", "");
+        },
+        
+        mouseMoveHandler: function(event) {
+            var $element = event.data.element;
+
+            if(event.targetTouches) {
+                var dragDiff = event.targetTouches[0].clientX - event.data.dragStartX;
+            } else {
+                var dragDiff = event.clientX - event.data.dragStartX;
+            }
+            $element.css("transform", "translate(" + dragDiff + "px,0px)")
+
+            if(dragDiff > this.options.dragThreshold ) {
+                this.toggle($element, true)
+            } else if(dragDiff < -this.options.dragThreshold) {
+                this.toggle($element, false)
+            }
+        },
+
+        animateEndHandler: function(event) {
+            $(event.currentTarget).removeClass("animate");
+        },
+
+        statusChangeHandler: function(model) {
+            var isStatusON = model.get("status") == "ON";
+            var $lightElement = this.$("li[data-light-id='" + model.id + "']");
+            
+            $lightElement.toggleClass("lightOn", isStatusON);
+            $lightElement.toggleClass("lightOff", !isStatusON);
         },
 
         dimLevelChangeHandler: function(event) {
@@ -69,18 +130,7 @@ define(function(require) {
             var $element = $(element);
             var id = $element.closest("li").data("light-id");
             return this.lights.get(id);
-        },
-
-        _markAsDirty: function() {
-            this.isDirty = true;
-        },
-
-        _removeMarkedAsDirty: function() {
-            this.isDirty = false;
-            this.render();
         }
-
-
     });
 
     return LightsView;
