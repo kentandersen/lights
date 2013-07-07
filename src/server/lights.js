@@ -4,10 +4,13 @@ var express = require("express");
 var settings = require("../../config/appsettings.js");
 var path = require('path');
 var restfullApi = require("./api.js");
+var hogan = require('hogan.js');
 
+var indexHtmlMustache = fs.readFileSync("./src/public/index.mustache").toString();
+var indexHtmlTemplate = hogan.compile(indexHtmlMustache);
 
-var privateKey = fs.readFileSync("../../security/privatekey.pem").toString();
-var certificate = fs.readFileSync("../../security/certificate.pem").toString();  
+var privateKey = fs.readFileSync("./security/privatekey.pem").toString();
+var certificate = fs.readFileSync("./security/certificate.pem").toString();  
 
 var serverOptions = {
     key: privateKey,
@@ -22,15 +25,27 @@ var app = express();
 
 // development only
 app.configure('development', function() {
-    app.use(express.static("../public"));
+    app.get('/', function (req, res) {
+        var indexHtml = indexHtmlTemplate.render({
+            cssFile: "css/app.less",
+            jsFile: "vendor/require.js",
+            includeLessCompiler: true
+        });
+
+        res.send(indexHtml);
+    });
+
+    app.use(express.static("./src/public"));
 });
 
 // production only
 app.configure('production', function() {
-    app.use(express.static("../../build/public"));
+    app.use(express.static("./build/public"));
 });
 
 restfullApi.initialize(app);
 
-console.log("Web server started" + (settings.useMock ? " with mock" : ""));
+console.log("Web server started in " + app.get("env") + (settings.useMock ? " with mock" : ""));
 https.createServer(serverOptions, app).listen(8443);
+
+exports.app = app;
