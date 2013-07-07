@@ -8,10 +8,10 @@ files = [
   JASMINE_ADAPTER,
   REQUIRE,
   REQUIRE_ADAPTER,
-  { pattern: 'src/test/js/**/*.js', included: false },
-  { pattern: 'src/main/webapp/**/*.js', included: false },
-  { pattern: 'src/main/webapp/**/*.mustache', included: false },
-  'src/test/test-main.js'
+  { pattern: 'test/**/*.js', included: false },
+  { pattern: 'src/public/**/*.js', included: false },
+  { pattern: 'src/public/**/*.mustache', included: false },
+  'test/test-main.js'
 ];
 
 

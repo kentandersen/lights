@@ -24,8 +24,10 @@ var webapp = path.join('src', 'public'),
 
     jsFileName = 'app-' + version + '.js',
     jsFile = path.join(targetDir, jsFileName),
-    cssFileName = 'style-' + version + '.css',
-    cssFile = path.join(targetDir, cssFileName);
+    cssFileName = 'css/style-' + version + '.css',
+    cssFile = path.join(targetDir, cssFileName),
+
+    imageResourceFolder = path.join(webapp, 'images'),
 
     rjsConfig = path.join(config, 'buildconfig.js'),
     jshintConfig = path.join(config, 'jshint.json');
@@ -55,6 +57,7 @@ target.build = function() {
     createCleanDir(targetDir);
 
     buildIndexHtml();
+    buildResources();
     buildJavaScript();
     buildCss();
 
@@ -81,9 +84,16 @@ var buildJavaScript = function() {
     npmBin('r.js', '-o ' + rjsConfig, 'out=' + jsFile);
 };
 
+var buildResources = function() {
+    section('Copying resources ' + imageResourceFolder + ' → ' + targetDir);
+    var res =  exec('cp -r ' + imageResourceFolder + ' ' + targetDir);
+    done(res);
+};
+
 var buildCss = function() {
     section('Building Less → ' + cssFile);
     npmBin('lessc', mainLessFile, cssFile);
+    npmBin('imageinliner', cssFile);
 };
 
 var renderAndWriteMustache = function(from, to, data) {
