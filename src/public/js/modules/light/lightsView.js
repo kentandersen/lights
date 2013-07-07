@@ -1,8 +1,8 @@
 define(function(require) {
 
     var _ = require("underscore");
+    var $ = require("jquery");
     var View = require('base/view');
-    var events = require('component/eventBus');
 
     // var UserDetailView = require('./userDetailView');
     var template = require('hgn!./lights');
@@ -37,13 +37,12 @@ define(function(require) {
             this.debounceDim = _.debounce(this.dim, 200);
         },
 
-        render: function(event) {
-            if(this.isDirty) {return;}
+        render: function() {
 
             this.renderTemplate({
-                lights: this.lights.map(function(lightModel, index) {
+                lights: this.lights.map(function(lightModel) {
                     var data = lightModel.toJSON();
-                    data.isOn = lightModel.get("status") == "ON";
+                    data.isOn = lightModel.get("status") === "ON";
                     return data;
                 })
             });
@@ -51,11 +50,11 @@ define(function(require) {
         },
 
         toggle: function($light, toggle) {
-            var lightModel = this._getLightModel($light)
+            var lightModel = this._getLightModel($light);
             var status = toggle ? "ON" : "OFF";
 
 
-            if(lightModel && lightModel.get("status") != status) {
+            if(lightModel && lightModel.get("status") !== status) {
                 lightModel.save("status", status, {patch: true});
             }
         },
@@ -72,15 +71,15 @@ define(function(require) {
 
             $("body").on("mousemove touchmove", {
                 dragStartX: event.targetTouches ? event.targetTouches[0].clientX : event.clientX,
-                element: $element, 
+                element: $element
             }, this.mouseMoveHandler);
 
             $("body").on("mouseup touchend", {
                 element: $element
-            }, this.mouseUpHandler)
-            
+            }, this.mouseUpHandler);
+
         },
-        
+
         mouseUpHandler: function(event) {
             var $element = event.data.element;
 
@@ -90,21 +89,22 @@ define(function(require) {
             $("body").off("mouseup touchend", this.mouseUpHandler);
             $element.css("transform", "");
         },
-        
+
         mouseMoveHandler: function(event) {
             var $element = event.data.element;
+            var dragDiff;
 
             if(event.targetTouches) {
-                var dragDiff = event.targetTouches[0].clientX - event.data.dragStartX;
+                dragDiff = event.targetTouches[0].clientX - event.data.dragStartX;
             } else {
-                var dragDiff = event.clientX - event.data.dragStartX;
+                dragDiff = event.clientX - event.data.dragStartX;
             }
-            $element.css("transform", "translate(" + dragDiff + "px,0px)")
+            $element.css("transform", "translate(" + dragDiff + "px,0px)");
 
             if(dragDiff > this.options.dragThreshold ) {
-                this.toggle($element, true)
+                this.toggle($element, true);
             } else if(dragDiff < -this.options.dragThreshold) {
-                this.toggle($element, false)
+                this.toggle($element, false);
             }
         },
 
@@ -113,9 +113,9 @@ define(function(require) {
         },
 
         statusChangeHandler: function(model) {
-            var isStatusON = model.get("status") == "ON";
+            var isStatusON = model.get("status") === "ON";
             var $lightElement = this.$("li[data-light-id='" + model.id + "']");
-            
+
             $lightElement.toggleClass("lightOn", isStatusON);
             $lightElement.toggleClass("lightOff", !isStatusON);
         },
@@ -123,7 +123,7 @@ define(function(require) {
         dimLevelChangeHandler: function(event) {
             var $element = $(event.currentTarget);
             var lightModel = this._getLightModel($element);
-            this.debounceDim($element.val(), lightModel)
+            this.debounceDim($element.val(), lightModel);
         },
 
         _getLightModel: function(element) {

@@ -4,7 +4,7 @@ define(function(require) {
     var LightModel = require("./light");
 
     var Lights = Collection.extend({
-        
+
         url: "lights",
 
         model: LightModel

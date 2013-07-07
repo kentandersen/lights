@@ -3,7 +3,7 @@ define(function(require) {
     var Model = require('base/model');
 
     var Light = Model.extend({
-        
+
         defaults: {
             id:     null,
             name:   "",
@@ -16,7 +16,7 @@ define(function(require) {
         },
 
         initialize: function(){
-        },
+        }
 
     });
 
