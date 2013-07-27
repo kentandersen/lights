@@ -55,7 +55,7 @@ define(function(require) {
 
 
             if(lightModel && lightModel.get("status") !== status) {
-                lightModel.save("status", status, {patch: true});
+                lightModel.save("status", status, {patch: true, wait: true});
             }
         },
 
@@ -70,7 +70,7 @@ define(function(require) {
             var $element = $(event.currentTarget);
 
             $("body").on("mousemove touchmove", {
-                dragStartX: event.targetTouches ? event.targetTouches[0].clientX : event.clientX,
+                dragStartX: event.originalEvent.targetTouches ? event.originalEvent.touches[0].pageX : event.clientX,
                 element: $element
             }, this.mouseMoveHandler);
 
@@ -91,14 +91,16 @@ define(function(require) {
         },
 
         mouseMoveHandler: function(event) {
+            event.preventDefault();
             var $element = event.data.element;
             var dragDiff;
 
-            if(event.targetTouches) {
-                dragDiff = event.targetTouches[0].clientX - event.data.dragStartX;
+            if(event.originalEvent && event.originalEvent.touches) {
+                dragDiff = event.originalEvent.touches[0].pageX - event.data.dragStartX;
             } else {
                 dragDiff = event.clientX - event.data.dragStartX;
             }
+
             $element.css("transform", "translate(" + dragDiff + "px,0px)");
 
             if(dragDiff > this.options.dragThreshold ) {
