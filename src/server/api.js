@@ -12,13 +12,6 @@ if(!settings.useMock) {
 var setupApi = function(app) {
 
     var devices = new Devices(telldus.getDevices());
-    
-    // app.get('/', function (req, res) {
-//     // var appFilePath = path.resolve("../public/index.html");
-//     res.send("appFilePath");
-// });
-
-    app.use(express.bodyParser());
 
     app.get('/lights', function (req, res) {
         var deviceAttr = devices.map(function(device){

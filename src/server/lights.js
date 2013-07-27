@@ -23,6 +23,8 @@ var serverOptions = {
 
 var app = express();
 
+app.use(express.bodyParser());
+
 // development only
 app.configure('development', function() {
     app.get('/', function (req, res) {
