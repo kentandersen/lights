@@ -102,9 +102,9 @@ define(function(require) {
             $element.css("transform", "translate(" + dragDiff + "px,0px)");
 
             if(dragDiff > this.options.dragThreshold ) {
-                this.toggle($element, true);
-            } else if(dragDiff < -this.options.dragThreshold) {
                 this.toggle($element, false);
+            } else if(dragDiff < -this.options.dragThreshold) {
+                this.toggle($element, true);
             }
         },
 
