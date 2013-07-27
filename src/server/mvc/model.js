@@ -1,7 +1,8 @@
 var _ = require("underscore");
 
 var Model = function (device) {
-    this.attributes = this.parse.call(this, device);
+
+    this.attributes = this.parse.call(this, device);    
 };
 
 _.extend(Model.prototype, {
@@ -28,9 +29,27 @@ _.extend(Model.prototype, {
     }
 });
 
-Model.extend = function(newMethods) {
-    _.extend(Model.prototype, newMethods);
-    return Model;
+
+// From Simple.js
+
+var ctor = function() {};
+Model.extend = function(properties) {
+    var parent = this;
+
+    var child = function() {
+
+        parent.apply(this, arguments);
+    };
+
+    ctor.prototype = parent.prototype;
+    child.prototype = new ctor();
+
+
+    _.extend(child.prototype, properties);
+
+    child.extend = parent.extend;
+
+    return child;
 };
 
 

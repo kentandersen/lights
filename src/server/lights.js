@@ -39,6 +39,7 @@ app.configure('development', function() {
 });
 
 // production only
+// tips: export NODE_ENV=production && node app.js
 app.configure('production', function() {
     app.use(express.static("./build/public"));
 });
