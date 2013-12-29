@@ -63,6 +63,11 @@ target.spec = function() {
     bin('karma', ['start', 'karma.conf.js', '--browsers PhantomJS', '--single-run']);
 };
 
+target.speccont = function() {
+    section('Running JavaScript tests');
+    bin('karma', ['start', 'karma.conf.js', '--browsers PhantomJS']);
+};
+
 target.build = function() {
     createCleanDir(targetDir);
 
