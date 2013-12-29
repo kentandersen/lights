@@ -86,7 +86,7 @@ target.buildjs = function() {
 
 target.buildcss = function() {
     section('Building Less → ' + cssFile);
-    bin('lessc', ['--yui-compress', mainLessFile, cssFile]);
+    bin('lessc', ['--relative-urls', '--yui-compress', mainLessFile, cssFile]);
     bin('imageinliner', ['-i ' + cssFile, '--overwrite', '--compress', '--rootPath src/public']);
 };
 
