@@ -10,7 +10,6 @@ var _ = require('underscore'),
     hogan = require('hogan.js'),
     moment = require('moment'),
     npmBin = require('npm-bin');
-var optimage = require('optimage');
 
 var isWin = (process.platform === 'win32');
 
