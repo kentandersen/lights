@@ -7,29 +7,14 @@ var preIncluded = ['sinon', 'jasmine-sinon'];
 var deps = preIncluded.concat(tests);
 
 requirejs.config({
-    urlArgs: 'v=' + Math.random(),
-    baseUrl: '/base/src/main/webapp/js',
+    baseUrl: '/base/src/public/js',
 
     paths: {
-        'jquery': '../vendor/jquery',
-        'underscore': '../vendor/underscore',
-        'backbone': '../vendor/backbone',
-        'hogan': '../vendor/hogan',
-        'hgn': '../vendor/plugin/hgn',
-        'text': '../vendor/plugin/text',
-
-        'sinon': '/base/src/test/js/vendor/sinon',
-        'jasmine-sinon': '/base/src/test/js/vendor/jasmine-sinon'
+        'sinon': '/base/test/vendor/sinon',
+        'jasmine-sinon': '/base/test/vendor/jasmine-sinon'
     },
 
     shim: {
-        'underscore': {
-            exports: '_'
-        },
-        'backbone': {
-            deps: ['underscore', 'jquery'],
-            exports: 'Backbone'
-        },
         'sinon': {
             exports: 'sinon'
         },

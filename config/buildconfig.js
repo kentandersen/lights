@@ -9,7 +9,7 @@
     include: ['main'],
     insertRequire: ['main'],
     wrap: false,
-    mainConfigFile: '../src/public/js/main.js',
+    mainConfigFile: '../src/public/js/require.conf.js',
     preserveLicenseComments: true,
     logLevel: 0,
     stubModules: ['text', 'hgn'],

@@ -11,6 +11,7 @@ files = [
   { pattern: 'test/**/*.js', included: false },
   { pattern: 'src/public/**/*.js', included: false },
   { pattern: 'src/public/**/*.mustache', included: false },
+  { pattern: 'src/public/js/require.conf.js', included: true },
   'test/test-main.js'
 ];
 
