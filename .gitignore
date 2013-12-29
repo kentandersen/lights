@@ -1,5 +1,6 @@
 security
 node_modules
 build
-src/public/vendor/bootstrap
+*.sublime-project
+*.sublime-workspace
 config/appsettings.js
