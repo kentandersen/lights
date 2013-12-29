@@ -67,6 +67,7 @@ define(function(require) {
         },
 
         mouseDownHandler: function(event) {
+            event.preventDefault();
             var $element = $(event.currentTarget);
 
             $("body").on("mousemove touchmove", {
