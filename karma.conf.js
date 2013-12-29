@@ -22,7 +22,7 @@ exclude = [
 
 
 preprocessors = {
-    '**/webapp/js/**/*.js': 'coverage'
+    'src/public/js/**/*.js': 'coverage'
 };
 
 

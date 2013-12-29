@@ -5,7 +5,7 @@
     baseUrl: '../src/public/js',
     inlineText: true,
     useStrict: false,
-    name: '../vendor/almond',
+    name: 'vendor/almond',
     include: ['main'],
     insertRequire: ['main'],
     wrap: false,
