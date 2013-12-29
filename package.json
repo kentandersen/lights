@@ -1,5 +1,5 @@
 {
-  "name": "JS-build",
+  "name": "Lights",
   "version": "0.0.1",
   "scripts": {
     "test": "node make.js test"
@@ -8,7 +8,8 @@
   "private": true,
   "dependencies": {
     "express": "~3.1.0",
-    "telldus-core-js": "0.0.6"
+    "telldus-core-js": "0.0.6",
+    "npm-bin": "~0.1.0"
   },
   "devDependencies": {
     "karma": "~0.8.0",
@@ -21,6 +22,6 @@
     "jshint": "~1.1.0",
     "underscore": "~1.4.4",
     "moment": "~2.0.0",
-    "imageinliner": "git+ssh://git@github.com:kentandersen/imageinliner.git"
+    "imageinliner": "~0.1.0"
   }
 }

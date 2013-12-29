@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 require('shelljs/make');
 require('colors');
 
@@ -7,7 +8,9 @@ var _ = require('underscore'),
     path = require('path'),
     zlib = require('zlib'),
     hogan = require('hogan.js'),
-    moment = require('moment');
+    moment = require('moment'),
+    npmBin = require('npm-bin');
+var optimage = require('optimage');
 
 var isWin = (process.platform === 'win32');
 
@@ -23,7 +26,7 @@ var webapp = path.join('src', 'public'),
     mainLessFile = path.join(webapp, 'css', 'app.less'),
 
     jsFileName = 'app-' + version + '.js',
-    jsFile = path.join(targetDir, jsFileName),
+    jsFile = path.join(targetDir, 'js', jsFileName),
     cssFileName = 'css/style-' + version + '.css',
     cssFile = path.join(targetDir, cssFileName),
 
@@ -36,35 +39,65 @@ var webapp = path.join('src', 'public'),
 /*** TARGETS ********/
 
 target.all = function() {
-    target.jshint();
     target.test();
     target.build();
 };
 
-target.jshint = function() {
-    var files = glob.sync(path.join(webapp, 'js', '**', '*.js'));
-
-    section('Running JSHint');
-    npmBin('jshint', '--config ' + jshintConfig, files.join(' '));
+target.test = function() {
+    target.jshint();
+    target.spec();
 };
 
-target.test = function() {
+target.jshint = function() {
+    var files = glob.sync(path.join(webapp, 'js', '**', '*.js'));
+    files = _.filter(files, function(file) {
+        return file.indexOf('src/public/js/vendor/') === -1;
+    });
+
+    section('Running JSHint');
+    bin('jshint', ['--config ' + jshintConfig, files.join(' ')]);
+};
+
+target.spec = function() {
     section('Running JavaScript tests');
-    npmBin('karma', 'start', 'karma.conf.js', '--browsers PhantomJS', '--single-run');
+    bin('karma', ['start', 'karma.conf.js', '--browsers PhantomJS', '--single-run']);
 };
 
 target.build = function() {
     createCleanDir(targetDir);
 
     buildIndexHtml();
-    buildResources();
-    buildJavaScript();
-    buildCss();
+    target.buildjs();
+    target.buildimages();
+    target.buildcss();
 
     echo();echo();
     success("Build succeeded!");
 };
 
+target.buildjs = function() {
+    section('Building JavaScript → ' + jsFile);
+    bin('r.js', ['-o ' + rjsConfig, 'out=' + jsFile]);
+};
+
+target.buildcss = function() {
+    section('Building Less → ' + cssFile);
+    bin('lessc', ['--yui-compress', mainLessFile, cssFile]);
+    bin('imageinliner', ['-i ' + cssFile, '--overwrite', '--compress', '--rootPath src/public']);
+};
+
+target.buildimages = function() {
+    section('Copying resources ' + imageResourceFolder + ' → ' + targetDir);
+    cp('-r', imageResourceFolder, targetDir);
+
+    section('optimizing images');
+
+    var pngs = glob.sync(path.join(targetDir, '**', '*.png'), {nocase: true});
+    optimizePngImages(pngs);
+
+    var svgs = glob.sync(path.join(targetDir, '**', '*.svg'), {nocase: true});
+    optimizeSvgImages(svgs);
+};
 
 /*** APP FUNCTIONS ********/
 
@@ -76,24 +109,6 @@ var buildIndexHtml = function() {
         cssFile: cssFileName,
         jsFile: jsFileName
     });
-};
-
-var buildJavaScript = function() {
-    console.log(rjsConfig, jsFile);
-    section('Building JavaScript → ' + jsFile);
-    npmBin('r.js', '-o ' + rjsConfig, 'out=' + jsFile);
-};
-
-var buildResources = function() {
-    section('Copying resources ' + imageResourceFolder + ' → ' + targetDir);
-    var res =  exec('cp -r ' + imageResourceFolder + ' ' + targetDir);
-    done(res);
-};
-
-var buildCss = function() {
-    section('Building Less → ' + cssFile);
-    npmBin('lessc', mainLessFile, cssFile);
-    npmBin('imageinliner', cssFile);
 };
 
 var renderAndWriteMustache = function(from, to, data) {
@@ -111,17 +126,25 @@ var renderAndWriteMustache = function(from, to, data) {
 
 // helper to call an NPM binary, which resides in node_modules/.bin/name
 // the rest of the arguments are used as space-separated arguments for the binary
-var npmBin = function(name) {
-    var bin = path.join('node_modules', '.bin', name);
-
-    if (!test('-e', bin)) {
-        echo('Binary does not exist: ' + bin);
-        exit(1);
-    }
-
-    var res = exec(bin + ' ' + _.rest(arguments).join(' '));
+var bin = function(name, args, options) {
+    var res = npmBin(name, args, options);
     done(res);
 }
+
+var optimizePngImages = function(pngs) {
+    if(pngs.length > 0) {
+        var res = exec('pngquant --force --speed 1 --ext .png -- ' + pngs.join(' '));
+        done(res);
+    }
+};
+
+var optimizeSvgImages = function(svgs) {
+    if(svgs.length > 0) {
+        svgs.forEach(function(svg) {
+            npmBin('svgo', svg, {silent: true});
+        });
+    }
+};
 
 var createCleanDir = function(dir) {
     if (test('-d', dir)) {
