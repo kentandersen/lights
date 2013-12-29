@@ -2,14 +2,13 @@
   "name": "Lights",
   "version": "0.0.1",
   "scripts": {
-    "test": "node make.js test"
+    "test": "./make.js test"
   },
   "readme": "empty",
   "private": true,
   "dependencies": {
     "express": "~3.1.0",
-    "telldus-core-js": "0.0.6",
-    "npm-bin": "~0.1.0"
+    "telldus-core-js": "0.0.6"
   },
   "devDependencies": {
     "karma": "~0.10.8",
@@ -22,6 +21,7 @@
     "jshint": "~1.1.0",
     "underscore": "~1.4.4",
     "moment": "~2.0.0",
-    "imageinliner": "~0.1.0"
+    "imageinliner": "~0.1.0",
+    "npm-bin": "~0.1.0"
   }
 }
