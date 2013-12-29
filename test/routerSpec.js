@@ -15,7 +15,7 @@ define(function(require) {
 
             var router = new Router(sections);
 
-            router.user();
+            router.light();
 
             var args = spy.firstCall.args;
 
