@@ -1,9 +1,8 @@
 var tests = Object.keys(window.__karma__.files).filter(function (file) {
-      return /Spec\.js$/.test(file);
+    return /Spec\.js$/.test(file);
 });
 
 var preIncluded = ['sinon', 'jasmine-sinon'];
-
 var deps = preIncluded.concat(tests);
 
 requirejs.config({
