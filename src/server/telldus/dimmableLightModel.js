@@ -7,13 +7,20 @@ var DimmableLightModel = function(attributes) {
     LightModel.apply(this, arguments);
 };
 
-_.extend(DimmableLightModel.prototype, {
+_.extend(DimmableLightModel.prototype, LightModel.prototype, {
+
+    parse: function(attr) {
+        var returnObj = LightModel.prototype.parse.apply(this, arguments);
+        returnObj.dimLevel = attr.status.level;
+
+        return returnObj;
+    },
 
     dim: function(dimLevel) {
         this.attributes.dimLevel = dimLevel;
-        return telldusRepository.dim(this.id, this.attributes.dimLevel);
+        return telldusRepository.dim(this.id, dimLevel);
     }
 
-}, LightModel.prototype);
+});
 
 module.exports = DimmableLightModel;
