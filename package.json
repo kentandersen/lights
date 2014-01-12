@@ -2,7 +2,8 @@
   "name": "Lights",
   "version": "0.0.1",
   "scripts": {
-    "test": "./make.js test"
+    "test": "./make.js test",
+    "start": "./src/server/app.js"
   },
   "readme": "empty",
   "private": true,
