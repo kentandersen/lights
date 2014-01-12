@@ -36,8 +36,12 @@ var renderData;
 app.configure('development', function() {
     app.use(express.static(path.join(__dirname, "..", "webapp")));
     renderData = {
-        cssFile: "css/lights.css",
-        jsFiles: ["js/app.js"]
+        cssFile: "css/lights.less",
+        jsFiles: [
+            "js/vendor/require.js",
+            "js/require.conf.js",
+            "js/main.js"
+        ]
     }
 });
 
@@ -46,12 +50,8 @@ app.configure('development', function() {
 app.configure('production', function() {
     app.use(express.static(path.join(__dirname, "..", "..", "build", "webapp")));
     renderData = {
-        cssFile: "css/lights.less",
-        jsFiles: [
-            "js/vendor/require.js",
-            "js/require.conf.js",
-            "js/main.js"
-        ]
+        cssFile: "css/style.css",
+        jsFiles: ["js/app.js"]
     }
 });
 
