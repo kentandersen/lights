@@ -1,6 +1,7 @@
 var _ = require("underscore");
 
 var Model = function (attributes) {
+    this.events = {};
     this.id = attributes[this.idAttribute] || attributes.id;
     this.attributes = this.parse.call(this, attributes);
 };
