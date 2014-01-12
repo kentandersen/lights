@@ -6,7 +6,7 @@ var preIncluded = ['sinon', 'jasmine-sinon'];
 var deps = preIncluded.concat(tests);
 
 requirejs.config({
-    baseUrl: '/base/src/public/js',
+    baseUrl: '/base/src/webapp/js',
 
     paths: {
         'sinon': '/base/test/vendor/sinon',

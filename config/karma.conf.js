@@ -2,16 +2,16 @@ module.exports = function(config) {
     config.set({
 
         // base path, that will be used to resolve files and exclude
-        basePath: '',
+        basePath: '../',
 
         // list of files / patterns to load in the browser
         files: [
-            'src/public/js/require.conf.js',
+            'src/webapp/js/require.conf.js',
             'test/test-main.js',
             { pattern: 'test/**/*.js', included: false },
             { pattern: 'test/*.js', included: false },
-            { pattern: 'src/public/**/*.js', included: false },
-            { pattern: 'src/public/**/*.mustache', included: false }
+            { pattern: 'src/webapp/**/*.js', included: false },
+            { pattern: 'src/webapp/**/*.mustache', included: false }
         ],
 
         frameworks: ["jasmine", "requirejs"],
@@ -20,7 +20,7 @@ module.exports = function(config) {
         exclude: [],
 
         // preprocessors: {
-        //     'src/public/js/**/*.js': 'coverage'
+        //     'src/webapp/js/**/*.js': 'coverage'
         // },
 
         // coverageReporter: {

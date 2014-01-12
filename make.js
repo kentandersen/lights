@@ -16,7 +16,7 @@ var isWin = (process.platform === 'win32');
 /*** CONFIG ********/
 
 var version = process.env.VERSION || moment().format('YYYYMMDD');
-    targetDir = process.env.OUTPUT_DIR || path.join('build', 'public');
+    targetDir = process.env.OUTPUT_DIR || path.join('build', 'webapp');
 
 var webapp = path.join('src', 'public'),
     config = path.join('config'),
@@ -50,7 +50,7 @@ target.test = function() {
 target.jshint = function() {
     var files = glob.sync(path.join(webapp, 'js', '**', '*.js'));
     files = _.filter(files, function(file) {
-        return file.indexOf('src/public/js/vendor/') === -1;
+        return file.indexOf('src/webapp/js/vendor/') === -1;
     });
 
     section('Running JSHint');
@@ -59,7 +59,7 @@ target.jshint = function() {
 
 target.spec = function() {
     section('Running JavaScript tests');
-    bin('karma', ['start', 'karma.conf.js', '--browsers PhantomJS', '--single-run']);
+    bin('karma', ['start', 'config/karma.conf.js', '--browsers PhantomJS', '--single-run']);
 };
 
 target.speccont = function() {
@@ -70,7 +70,6 @@ target.speccont = function() {
 target.build = function() {
     createCleanDir(targetDir);
 
-    buildIndexHtml();
     target.buildjs();
     target.buildimages();
     target.buildcss();
@@ -104,16 +103,6 @@ target.buildimages = function() {
 };
 
 /*** APP FUNCTIONS ********/
-
-var buildIndexHtml = function() {
-    var htmlFile = path.join(targetDir, 'index.html');
-
-    section('Building HTML → ' + htmlFile);
-    renderAndWriteMustache(indexFile, htmlFile, {
-        cssFile: cssFileName,
-        jsFile: jsFileName
-    });
-};
 
 var renderAndWriteMustache = function(from, to, data) {
     var mustache = fs.readFileSync(from).toString();
