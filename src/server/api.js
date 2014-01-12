@@ -22,7 +22,7 @@ var setupApi = function(app) {
     });
 
     app.get('/lights/:id', function (req, res) {
-        var id = parseInt(req.params.id, 10);    
+        var id = parseInt(req.params.id, 10);
         var device = devices.getDevicesBy("id", id);
 
         if(device) {
@@ -33,7 +33,7 @@ var setupApi = function(app) {
     });
 
     app.patch('/lights/:id', function (req, res) {
-        var id = parseInt(req.params.id, 10);    
+        var id = parseInt(req.params.id, 10);
         var device = devices.getDevicesBy("id", id);
 
         if(device) {
@@ -60,4 +60,4 @@ var setupApi = function(app) {
 };
 
 
-exports.initialize = setupApi;
+module.exports = setupApi;
