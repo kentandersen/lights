@@ -2,7 +2,7 @@ var _ = require("underscore");
 
 var Model = function (attributes) {
     this.id = attributes[this.idAttribute] || attributes.id;
-    this.attributes = this.parse.call(this, device);
+    this.attributes = this.parse.call(this, attributes);
 };
 
 _.extend(Model.prototype, {
@@ -53,4 +53,4 @@ Model.extend = function(properties) {
 };
 
 
-exports.Model = Model;
+module.exports = Model;

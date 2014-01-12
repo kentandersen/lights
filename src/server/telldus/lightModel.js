@@ -1,12 +1,8 @@
 var _ = require("underscore");
+var Model = require("../base/model.js");
 var telldusRepository = require("./telldusRepository.js");
 
-var DeviceModel = function(attributes) {
-    this.id = attributes.id;
-    this.attributes = this.parse(attributes);
-};
-
-_.extend(DeviceModel.prototype, {
+var DeviceModel = Model.extend({
 
     parse: function(attr) {
         return {

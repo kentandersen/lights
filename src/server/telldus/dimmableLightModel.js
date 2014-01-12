@@ -3,11 +3,7 @@ var telldusRepository = require("./telldusRepository.js");
 var LightModel = require("./lightModel.js");
 
 
-var DimmableLightModel = function(attributes) {
-    LightModel.apply(this, arguments);
-};
-
-_.extend(DimmableLightModel.prototype, LightModel.prototype, {
+var DimmableLightModel = LightModel.extend({
 
     parse: function(attr) {
         var returnObj = LightModel.prototype.parse.apply(this, arguments);
