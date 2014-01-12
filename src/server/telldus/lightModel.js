@@ -1,63 +1,21 @@
 var _ = require("underscore");
-var settings = require("../../config/appsettings.js");
-var Model = require("./mvc/model.js").Model;
+var telldusRepository = require("./telldusRepository.js");
 
-if(!settings.useMock) {
-    var telldus = require("telldus-core-js");
-} else {
-    var telldus = require("./telldus-core-js-mock/telldus-mock.js");
-}
+var DeviceModel = function(attributes) {
+    this.id = attributes.id;
+    this.attributes = attributes;
+};
 
-var DeviceModel = Model.extend({
-
-    events: {
-        "change:status": "statusChangeHandler",
-        "change:dimLevel": "dim"
-    },
-
-    parse: function(data) {
-        data.isDimmable = _.contains(data.methods, "DIM");
-        if(data.isDimmable) {
-            data.dimLevel = data.status.level
-        }
-        data.status = data.status.status;
-
-        return data;
-    },
+_.extend(DeviceModel.prototype, {
 
     turnOn: function () {
-        return telldus.turnOn(this.attributes.id);
+        return telldusRepository.turnOnDevice(this.id);
     },
 
     turnOff: function () {
-        return telldus.turnOff(this.attributes.id);
-    },
-
-    dim: function () {
-        if(this.isDimmable()) {
-            return telldus.dim(this.attributes.id, this.attributes.dimLevel);
-        } else {
-            return {
-                status: "error",
-                error: "not a dimmable device"
-            };
-        }
-    },
-
-    isDimmable: function() {
-        return this.attributes.isDimmable;
-    },
-
-    statusChangeHandler: function () {
-
-        var status = this.attributes.status;
-        if(status === "ON") {
-            return this.turnOn();
-        } else {
-            return this.turnOff();
-        }
+        return telldusRepository.turnOffDevice(this.id);
     }
 
 });
 
-exports.DeviceModel = DeviceModel;
+module.exports = DeviceModel;
