@@ -27,9 +27,9 @@ var setupApi = function(app) {
         var device = telldusService.getDevice(id);
 
         if(device) {
-            res.send(device.set(req.body), 200);
+            res.json(device.set(req.body));
         } else {
-            res.send("no such device", 404);
+            res.json({error:"no such device"}, 404);
         }
     });
 
