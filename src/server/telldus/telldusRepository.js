@@ -1,7 +1,4 @@
 var _ = require("underscore");
-var LightModel = require("./lightModel.js");
-var DimmableLightModel = require("./dimmableLightModel.js");
-
 
 var useMock = true;
 var telldus = require(!useMock ? "telldus-core-js" : "./mock/telldus-core-js.js");
@@ -12,14 +9,23 @@ var devices = telldus.getDevices();
 
 
 exports.getDevices = function() {
-    return _.map(devices, function(device) {
-        return createDeviceModel(device);
-    });
+    return devices;
 };
 
 exports.getDevice = function(id) {
-    var device = _.findWhere(devices, {id: id});
-    if(device) {
-        return createDeviceModel(device);
-    }
+    return _.findWhere(devices, {id: id});
 };
+
+exports.turnOnDevice = function(id) {
+    return telldus.turnOn(id);
+};
+
+exports.turnOffDevice = function(id) {
+    return telldus.turnOff(id);
+};
+
+exports.dimDevice = function(id, dimLevel) {
+    return telldus.dim(id, dimLevel);
+};
+
+
