@@ -5,7 +5,7 @@ var fixtures = [
         methods: [ 'TURNON', 'TURNOFF' ],
         model: 'selflearning-switch',
         type: 'DEVICE',
-        status: { status: 'OFF' } 
+        status: { status: 'OFF' }
     }, {
         name: 'Soverom',
         id: 2,
@@ -19,7 +19,7 @@ var fixtures = [
         methods: [ 'TURNON', 'TURNOFF' ],
         model: 'selflearning-switch',
         type: 'DEVICE',
-        status: { status: 'OFF' } 
+        status: { status: 'OFF' }
     }, {
         name: 'Stue',
         id: 4,
@@ -30,4 +30,4 @@ var fixtures = [
     }
 ];
 
-exports.fixtures = fixtures;
+module.exports = fixtures;
