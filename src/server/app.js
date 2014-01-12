@@ -1,16 +1,12 @@
+#!/usr/bin/env node
 var fs = require("fs");
-var https = require('https');
 var express = require("express");
-var settings = require("../../config/appsettings.js");
-var path = require('path');
-var restfullApi = require("./api.js");
-var hogan = require('hogan.js');
-
-var indexHtmlMustache = fs.readFileSync("./src/public/index.mustache").toString();
-var indexHtmlTemplate = hogan.compile(indexHtmlMustache);
+var cons = require("consolidate");
+var path = require("path");
+var api = require("./api.js");
 
 var privateKey = fs.readFileSync("./security/privatekey.pem").toString();
-var certificate = fs.readFileSync("./security/certificate.pem").toString();  
+var certificate = fs.readFileSync("./security/certificate.pem").toString();
 
 var serverOptions = {
     key: privateKey,
@@ -24,31 +20,50 @@ var serverOptions = {
 var app = express();
 
 app.use(express.bodyParser());
+api(app);
+
+// assign the mustache engine to .html files
+app.engine('html', cons.handlebars);
+
+// set .html as the default extension
+app.set('view engine', 'html');
+app.set('views', path.join(__dirname, "views"));
+
+
+var renderData;
 
 // development only
 app.configure('development', function() {
-    app.get('/', function (req, res) {
-        var indexHtml = indexHtmlTemplate.render({
-            cssFile: "css/app.less",
-            jsFile: "vendor/require.js",
-            includeLessCompiler: true
-        });
-
-        res.send(indexHtml);
-    });
-
-    app.use(express.static("./src/public"));
+    app.use(express.static(path.join(__dirname, "..", "webapp")));
+    renderData = {
+        cssFile: "css/lights.css",
+        jsFiles: ["js/app.js"]
+    }
 });
 
 // production only
 // tips: export NODE_ENV=production && node app.js
 app.configure('production', function() {
-    app.use(express.static("./build/public"));
+    app.use(express.static(path.join(__dirname, "..", "..", "build", "webapp")));
+    renderData = {
+        cssFile: "css/lights.less",
+        jsFiles: [
+            "js/vendor/require.js",
+            "js/require.conf.js",
+            "js/main.js"
+        ]
+    }
 });
 
-restfullApi.initialize(app);
 
-console.log("Web server started in " + app.get("env") + (settings.useMock ? " with mock" : ""));
-https.createServer(serverOptions, app).listen(8443);
+// static file setup
+app.get('/', function(req, res) {
+    res.render('index', renderData);
+});
 
-exports.app = app;
+
+// if on port is set, use port.
+var port = process.env.PORT || 1339;
+app.listen(port);
+
+console.log("app started of port " +  port);
