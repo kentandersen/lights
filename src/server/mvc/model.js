@@ -1,8 +1,8 @@
 var _ = require("underscore");
 
-var Model = function (device) {
-
-    this.attributes = this.parse.call(this, device);    
+var Model = function (attributes) {
+    this.id = attributes[this.idAttribute] || attributes.id;
+    this.attributes = this.parse.call(this, device);
 };
 
 _.extend(Model.prototype, {
