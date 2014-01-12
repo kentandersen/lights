@@ -1,40 +1,41 @@
-var Devices = require("./devices.js").Devices;
-var settings = require("../../config/appsettings.js");
-var express = require("express");
+var telldusService = require("./telldus/tellduSService.js");
 
-if(!settings.useMock) {
-    var telldus = require("telldus-core-js");
-} else {
-    var telldus = require("./telldus-core-js-mock/telldus-mock.js");
-}
+// var Devices = require("./devices.js").Devices;
+// var settings = require("../../config/appsettings.js");
+// var express = require("express");
+
+// if(!settings.useMock) {
+//     var telldus = require("telldus-core-js");
+// } else {
+//     var telldus = require("./telldus-core-js-mock/telldus-mock.js");
+// }
 
 
 var setupApi = function(app) {
 
-    var devices = new Devices(telldus.getDevices());
-
     app.get('/lights', function (req, res) {
-        var deviceAttr = devices.map(function(device){
-            return device.attributes;
+        var devices = telldusService.getDevices();
+        var deviceAttri = devices.map(function(device){
+            return device.attributes
         });
 
-        res.send(deviceAttr);
+        res.json(deviceAttri);
     });
 
     app.get('/lights/:id', function (req, res) {
         var id = parseInt(req.params.id, 10);
-        var device = devices.getDevicesBy("id", id);
+        var device = telldusService.getDevice(id);
 
         if(device) {
-            res.send(device.attributes);
+            res.json(device.attributes);
         } else {
-            res.send("no such device", 404);
+            res.json({error:"no such device"}, 404);
         }
     });
 
     app.patch('/lights/:id', function (req, res) {
         var id = parseInt(req.params.id, 10);
-        var device = devices.getDevicesBy("id", id);
+        var device = telldusService.getDevice(id);
 
         if(device) {
             res.send(device.set(req.body), 200);
