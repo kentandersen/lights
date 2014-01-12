@@ -4,3 +4,4 @@ build
 *.sublime-project
 *.sublime-workspace
 config/appsettings.js
+npm-debug.log
