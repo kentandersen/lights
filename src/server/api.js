@@ -1,16 +1,5 @@
 var telldusService = require("./telldus/tellduSService.js");
 
-// var Devices = require("./devices.js").Devices;
-// var settings = require("../../config/appsettings.js");
-// var express = require("express");
-
-// if(!settings.useMock) {
-//     var telldus = require("telldus-core-js");
-// } else {
-//     var telldus = require("./telldus-core-js-mock/telldus-mock.js");
-// }
-
-
 var setupApi = function(app) {
 
     app.get('/lights', function (req, res) {
