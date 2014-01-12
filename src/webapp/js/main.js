@@ -1,9 +1,5 @@
-define(function(require) {
-
-    var $ = require('jquery');
-    var Backbone = require('backbone');
-
-    var App = require('modules/app/app');
+requirejs(["jquery", "backbone", "modules/app/app"],
+  function(jquery,   Backbone,   App) {
 
     var app = new App({ el: $("#application") });
 
