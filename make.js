@@ -8,25 +8,24 @@ var _ = require('underscore'),
     path = require('path'),
     zlib = require('zlib'),
     hogan = require('hogan.js'),
-    moment = require('moment'),
     npmBin = require('npm-bin');
 
 var isWin = (process.platform === 'win32');
 
 /*** CONFIG ********/
 
-var version = process.env.VERSION || moment().format('YYYYMMDD');
-    targetDir = process.env.OUTPUT_DIR || path.join('build', 'webapp');
 
-var webapp = path.join('src', 'public'),
+var targetDir = process.env.OUTPUT_DIR || path.join('build', 'webapp');
+
+var webapp = path.join('src', 'webapp'),
     config = path.join('config'),
 
     indexFile = path.join(webapp, 'index.mustache'),
-    mainLessFile = path.join(webapp, 'css', 'app.less'),
+    mainLessFile = path.join(webapp, 'css', 'light.less'),
 
-    jsFileName = 'app-' + version + '.js',
+    jsFileName = 'app.js',
     jsFile = path.join(targetDir, 'js', jsFileName),
-    cssFileName = 'css/style-' + version + '.css',
+    cssFileName = 'css/style.css',
     cssFile = path.join(targetDir, cssFileName),
 
     imageResourceFolder = path.join(webapp, 'images'),
@@ -86,7 +85,7 @@ target.buildjs = function() {
 target.buildcss = function() {
     section('Building Less → ' + cssFile);
     bin('lessc', ['--relative-urls', '--yui-compress', mainLessFile, cssFile]);
-    bin('imageinliner', ['-i ' + cssFile, '--overwrite', '--compress', '--rootPath src/public']);
+    bin('imageinliner', ['-i ' + cssFile, '--overwrite', '--compress', '--rootPath src/webapp']);
 };
 
 target.buildimages = function() {
