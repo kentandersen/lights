@@ -21,7 +21,7 @@ var webapp = path.join('src', 'webapp'),
     config = path.join('config'),
 
     indexFile = path.join(webapp, 'index.mustache'),
-    mainLessFile = path.join(webapp, 'css', 'light.less'),
+    mainLessFile = path.join(webapp, 'css', 'lights.less'),
 
     jsFileName = 'app.js',
     jsFile = path.join(targetDir, 'js', jsFileName),
