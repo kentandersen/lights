@@ -1,5 +1,5 @@
 requirejs(["jquery", "backbone", "modules/app/app"],
-  function(jquery,   Backbone,   App) {
+  function( $,        Backbone,   App) {
 
     var app = new App({ el: $("#application") });
 
