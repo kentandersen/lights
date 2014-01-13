@@ -5,17 +5,17 @@ var cons = require("consolidate");
 var path = require("path");
 var api = require("./api.js");
 
-var privateKey = fs.readFileSync("./security/privatekey.pem").toString();
-var certificate = fs.readFileSync("./security/certificate.pem").toString();
+// var privateKey = fs.readFileSync("./security/privatekey.pem").toString();
+// var certificate = fs.readFileSync("./security/certificate.pem").toString();
 
-var serverOptions = {
-    key: privateKey,
-    cert: certificate
+// var serverOptions = {
+//     key: privateKey,
+//     cert: certificate
 
-    // ,ca: fs.readFileSync('ssl/ca/ca.crt'),
-    // requestCert: true,
-    // rejectUnauthorized: true
-};
+//     // ,ca: fs.readFileSync('ssl/ca/ca.crt'),
+//     // requestCert: true,
+//     // rejectUnauthorized: true
+// };
 
 var app = express();
 
