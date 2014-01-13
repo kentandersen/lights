@@ -1,4 +1,4 @@
-var telldusService = require("./telldus/tellduSService.js");
+var telldusService = require("./telldus/telldusService.js");
 
 var setupApi = function(app) {
 
