@@ -1,6 +1,5 @@
 security
 node_modules
-build
 *.sublime-project
 *.sublime-workspace
 config/appsettings.js
