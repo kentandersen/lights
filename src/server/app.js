@@ -38,6 +38,7 @@ app.configure('development', function() {
     renderData = {
         cssFile: "css/lights.less",
         jsFiles: [
+            "js/vendor/less.js",
             "js/vendor/require.js",
             "js/require.conf.js",
             "js/main.js"
