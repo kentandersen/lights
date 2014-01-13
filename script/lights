@@ -6,10 +6,10 @@
 
 #inspired by http://werxltd.com/wp/2012/01/05/simple-init-d-script-template/
 
-DAEMON_PATH="/home/wes/Development/projects/myapp"
+DAEMON_PATH="/usr/local/src/lights"
 
-DAEMON=lights
-DAEMONOPTS=""
+DAEMON="npm"
+DAEMONOPTS="start"
 
 NAME=lights
 DESC="Controlling telldus switches"
