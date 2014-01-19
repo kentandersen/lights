@@ -13,7 +13,7 @@ export PORT=8080
 
 case "$1" in
   start)
-  exec forever --sourceDir=$DAEMON_PATH -p $PIDFILES $SCRIPT
+  exec forever start --sourceDir=$DAEMON_PATH -p $PIDFILES $SCRIPT
   ;;
 stop)
   exec forever stop --sourceDir=$DAEMON_PATH $SCRIPT
