@@ -1,7 +1,7 @@
 var _ = require("underscore");
 
 var useMock = true;
-var telldus = require(!useMock ? "telldus-core-js" : "./mock/telldus-core-js.js");
+var telldus = require(!useMock ? "telldus" : "./mock/telldus-core-js.js");
 
 // populate all devices
 var devices = telldus.getDevices();
