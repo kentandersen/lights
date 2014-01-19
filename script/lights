@@ -1,34 +1,30 @@
-#!/bin/bash
-# lights daemon
+#!/bin/sh
+#/etc/init.d/lights
 
 DAEMON_PATH="/usr/local/src/lights"
+PIDFILES="/var/run/forever"
+SCRIPT="src/server/app.js"
 
-DAEMON="forever"
-DAEMONOPTS="src/server/app.js"
+export PATH=$PATH:/usr/local/bin
+export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
 
-NAME=lights
-DESC="Controlling telldus switches"
-PIDFILE=/var/run/$NAME.pid
-SCRIPTNAME=/etc/init.d/$NAME
+export NODE_ENV="production"
+export PORT=8080
 
 case "$1" in
-start)
-    printf "%-50s" "Starting $NAME..."
-    cd $DAEMON_PATH
-    $DAEMON start $DAEMONOPTS
-;;
-
+  start)
+  exec forever --sourceDir=$DAEMON_PATH -p $PIDFILES $SCRIPT
+  ;;
 stop)
-    printf "%-50s" "Stopping $NAME"
-    cd $DAEMON_PATH
-    $DAEMON stop $DAEMONOPTS
-;;
-
+  exec forever stop --sourceDir=$DAEMON_PATH $SCRIPT
+  ;;
 restart)
-    $DAEMON restart $DAEMONOPTS
-;;
-
+  exec forever restart --sourceDir=$DAEMON_PATH -p $PIDFILES $SCRIPT
+  ;;
 *)
-    echo "Usage: $0 {start|stop|restart}"
-    exit 1
+  echo "Usage: /etc/init.d/lights {start|stop|restart}"
+  exit 1
+  ;;
 esac
+
+exit 0
