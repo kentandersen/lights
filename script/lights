@@ -2,7 +2,7 @@
 #/etc/init.d/lights
 
 DAEMON_PATH="/usr/local/src/lights"
-PIDFILES="/var/run/forever"
+PIDFILES="/tmp/forever"
 SCRIPT="src/server/app.js"
 
 export PATH=$PATH:/usr/local/bin
