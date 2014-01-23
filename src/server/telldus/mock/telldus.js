@@ -1,21 +1,25 @@
 // var tellduscore = require('./build/Release/telldus-core-js');
 var fixtures = require("./fixtures.js");
 
+var runCallback = function(callback, returnObj) {
+    callback = callback || function() {};
+
+    setTimeout(function(){
+        callback(null, returnObj);
+    }, 500);
+};
+
 (function (exports, global) {
 
     exports.getDevices = function(callback) {
-        setTimeout(function(){
-            callback(null,fixtures);
-        }, 500);
+        runCallback(callback, fixtures);
     };
     exports.getDevicesSync = function() {
         return fixtures;
     };
 
     exports.turnOn = function(id, callback) {
-        setTimeout(function(){
-            callback(null);
-        }, 500);
+        runCallback(callback);
     };
 
     exports.turnOnSync = function(id) {
@@ -23,9 +27,7 @@ var fixtures = require("./fixtures.js");
     };
 
     exports.turnOff = function(id, callback) {
-        setTimeout(function(){
-            callback(null);
-        }, 500);
+        runCallback(callback);
     };
 
     exports.turnOffSync = function(id) {
@@ -33,9 +35,7 @@ var fixtures = require("./fixtures.js");
     };
 
     exports.dim = function(id, level, callback) {
-        setTimeout(function(){
-            callback(null);
-        }, 500);
+        runCallback(callback);
     };
 
     exports.dimSync = function(id, level) {
