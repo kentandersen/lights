@@ -1,7 +1,7 @@
 var Q = require("q");
 var _ = require("underscore");
 
-var useMock = true;
+var useMock = process.env.NODE_EVN === "production";
 var telldus = require(!useMock ? "telldus" : "./mock/telldus.js");
 
 // populate all devices
