@@ -36,20 +36,6 @@ var setupApi = function(app) {
         }
     });
 
-
-    app.put('/lights/:id/dim=:level', function (req, res) {
-        var id = parseInt(req.params.id, 10);
-        var level = parseInt(req.params.level, 10);
-        var device = devices.getDevicesBy("id", id);
-
-        if(device) {
-            var dim = device.dim(level);
-            res.send(dim, dim.status === "ok" ? 200 : 500);
-        } else {
-            res.send("no such device", 404);
-        }
-    });
-
 };
 
 
