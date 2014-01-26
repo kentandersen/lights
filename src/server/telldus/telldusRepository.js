@@ -19,9 +19,8 @@ exports.getDevice = function(id) {
 
 exports.turnOnDevice = function(id) {
     var deferred = Q.defer();
-console.log("turne on");
+
     return telldus.turnOn(id, function(error) {
-        console.log(error);
         if (error) {
             deferred.reject(new Error(error));
         } else {
