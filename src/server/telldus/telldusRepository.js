@@ -1,10 +1,11 @@
+var Q = require("q");
 var _ = require("underscore");
 
 var useMock = true;
-var telldus = require(!useMock ? "telldus" : "./mock/telldus-core-js.js");
+var telldus = require(!useMock ? "telldus" : "./mock/telldus.js");
 
 // populate all devices
-var devices = telldus.getDevices();
+var devices = telldus.getDevicesSync();
 
 
 
@@ -17,15 +18,45 @@ exports.getDevice = function(id) {
 };
 
 exports.turnOnDevice = function(id) {
-    return telldus.turnOn(id);
+    var deferred = Q.defer();
+
+    return telldus.turnOn(id, function(error) {
+        if (error) {
+            deferred.reject(new Error(error));
+        } else {
+            deferred.resolve();
+        }
+    });
+
+    return deferred.promise;
 };
 
 exports.turnOffDevice = function(id) {
-    return telldus.turnOff(id);
+    var deferred = Q.defer();
+
+    return telldus.turnOff(id, function(error) {
+        if (error) {
+            deferred.reject(new Error(error));
+        } else {
+            deferred.resolve();
+        }
+    });
+
+    return deferred.promise;
 };
 
 exports.dimDevice = function(id, dimLevel) {
-    return telldus.dim(id, dimLevel);
+    var deferred = Q.defer();
+
+    return telldus.dim(id, dimLevel, function(error) {
+        if (error) {
+            deferred.reject(new Error(error));
+        } else {
+            deferred.resolve();
+        }
+    });
+
+    return deferred.promise;
 };
 
 
