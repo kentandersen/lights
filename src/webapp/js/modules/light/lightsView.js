@@ -55,7 +55,7 @@ define(function(require) {
 
 
             if(lightModel && lightModel.get("status") !== status) {
-                lightModel.save("status", status, {patch: true, wait: true});
+                lightModel.save("status", status, {patch: true});
             }
         },
 
