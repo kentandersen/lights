@@ -25,6 +25,7 @@ var DeviceModel = Model.extend({
     },
 
     statusChangeHandler: function() {
+        console.log(this.attributes);
         if(this.attributes.status === "ON") {
             return this.turnOn();
         } else {
