@@ -19,7 +19,6 @@ var api = require("./api.js");
 
 var app = express();
 
-app.use(express.bodyParser());
 api(app);
 
 // assign the mustache engine to .html files

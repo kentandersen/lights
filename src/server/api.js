@@ -1,6 +1,9 @@
+var express = require("express");
 var telldusService = require("./telldus/telldusService.js");
 
 var setupApi = function(app) {
+
+    app.use(express.bodyParser());
 
     app.get('/lights', function (req, res) {
         var devices = telldusService.getDevices();
