@@ -4,6 +4,10 @@ var telldusRepository = require("./telldusRepository.js");
 
 var DeviceModel = Model.extend({
 
+    events: {
+        "change:status": "statusChangeHandler"
+    },
+
     parse: function(attr) {
         return {
             name: attr.name,
@@ -18,6 +22,14 @@ var DeviceModel = Model.extend({
 
     turnOff: function () {
         return telldusRepository.turnOffDevice(this.id);
+    },
+
+    statusChangeHandler: function() {
+        if(this.attributes.status === "ON") {
+            return this.turnOn();
+        } else {
+            return this.turnOff();
+        }
     }
 
 });

@@ -10,16 +10,15 @@ _.extend(Model.prototype, {
     set: function (data, options) {
         var changed = {};
         if(data && !_.isEmpty(data)) {
-            _.each(data, function(value, index) {
-                this.attributes[index] = changed[index] = value;
-                this.trigger("change:"+index);
+            _.each(data, function(value, key) {
+                this.attributes[key] = changed[key] = value;
+                this.trigger("change:"+key);
             }, this);
 
             this.trigger("change");
         }
 
         return changed;
-
     },
 
     trigger: function(event) {
