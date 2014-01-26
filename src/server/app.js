@@ -1,9 +1,12 @@
 #!/usr/bin/env node
+require("./views/helpers.js");
+
 var fs = require("fs");
 var express = require("express");
 var cons = require("consolidate");
 var path = require("path");
 var api = require("./api.js");
+
 
 // var privateKey = fs.readFileSync("./security/privatekey.pem").toString();
 // var certificate = fs.readFileSync("./security/certificate.pem").toString();
