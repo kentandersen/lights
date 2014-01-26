@@ -12,7 +12,7 @@ var DeviceModel = Model.extend({
         return {
             name: attr.name,
             id: attr.id,
-            status: attr.status.status
+            status: attr.status.name
         };
     },
 
@@ -25,7 +25,6 @@ var DeviceModel = Model.extend({
     },
 
     statusChangeHandler: function() {
-        console.log(this.attributes);
         if(this.attributes.status === "ON") {
             return this.turnOn();
         } else {

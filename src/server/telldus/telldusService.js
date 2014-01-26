@@ -6,7 +6,7 @@ var DimmableLightModel = require("./dimmableLightModel.js");
 
 
 var createDeviceModel = function(attributes) {
-    if(attributes.model === "selflearning-dimmer") {
+    if(_.contains(attributes.methods, "DIM")) {
         return new DimmableLightModel(attributes);
     } else {
         return new LightModel(attributes);
