@@ -1,176 +1,53 @@
 #!/usr/bin/env node
-require('shelljs/make');
-require('colors');
 
-var _ = require('underscore'),
-    fs = require('fs'),
-    glob = require('glob'),
-    path = require('path'),
-    zlib = require('zlib'),
-    hogan = require('hogan.js'),
-    npmBin = require('npm-bin');
+var path = require('path');
+var glob = require('glob');
+var make = require("make");
 
-var isWin = (process.platform === 'win32');
-
-/*** CONFIG ********/
+var build = process.env.OUTPUT_DIR || path.join('build', 'webapp');
+var webapp = path.join('src', 'webapp');
+var config = path.join('config');
 
 
-var targetDir = process.env.OUTPUT_DIR || path.join('build', 'webapp');
+make.addGroup('build')
 
-var webapp = path.join('src', 'webapp'),
-    config = path.join('config'),
+    .addJob('cleandir', 'cleandir', {
+        dir: build
+    })
 
-    indexFile = path.join(webapp, 'index.mustache'),
-    mainLessFile = path.join(webapp, 'css', 'lights.less'),
+    .addJob('css', 'less', {
+        inputFile:  path.join(webapp, 'css', 'lights.less'),
+        outputFile: path.join(build, 'css', 'style.css'),
+        rootImagePath: "src/webapp"
+    })
 
-    jsFileName = 'app.js',
-    jsFile = path.join(targetDir, 'js', jsFileName),
-    cssFileName = 'css/style.css',
-    cssFile = path.join(targetDir, cssFileName),
+    .addJob('js', 'require', {
+        config:     path.join(config, 'buildconfig.js'),
+        outputFile: path.join(build, 'js', 'app.js')
+    })
 
-    imageResourceFolder = path.join(webapp, 'images'),
-
-    rjsConfig = path.join(config, 'buildconfig.js'),
-    jshintConfig = path.join(config, 'jshint.json');
-
-
-/*** TARGETS ********/
-
-target.all = function() {
-    target.test();
-    target.build();
-};
-
-target.test = function() {
-    target.jshint();
-    target.spec();
-};
-
-target.jshint = function() {
-    var files = glob.sync(path.join(webapp, 'js', '**', '*.js'));
-    files = _.filter(files, function(file) {
-        return file.indexOf('src/webapp/js/vendor/') === -1;
+    .addJob('images', 'images', {
+        inputDir:   path.join(webapp, 'images'),
+        outputDir:  path.join(build, 'images')
     });
 
-    section('Running JSHint');
-    bin('jshint', ['--config ' + jshintConfig, files.join(' ')]);
-};
+make.addGroup('test')
 
-target.spec = function() {
-    section('Running JavaScript tests');
-    bin('karma', ['start', 'config/karma.conf.js', '--browsers PhantomJS', '--single-run']);
-};
+    .addJob('jshint', 'jshint', {
+        files:      glob.sync(path.join(webapp, 'js', '**', '*.js')),
+        exclude:    path.join(webapp,'js', 'vendor/')
+    })
 
-target.speccont = function() {
-    section('Running JavaScript tests');
-    bin('karma', ['start', 'karma.conf.js', '--browsers PhantomJS']);
-};
+    .addJob('js', 'karma', {
+        config:     path.join(config, 'karma.conf.js')
+    });
 
-target.build = function() {
-    createCleanDir(targetDir);
+make.addGroup('util', { skip: true })
 
-    target.buildjs();
-    target.buildimages();
-    target.buildcss();
+    .addJob('testcont', 'karma', {
+        config:     path.join(config, 'karma.conf.js'),
+        singleRun:  false,
+        description: "Running js unit tests continuously on save"
+    })
 
-    echo();echo();
-    success("Build succeeded!");
-};
-
-target.buildjs = function() {
-    section('Building JavaScript → ' + jsFile);
-    bin('r.js', ['-o ' + rjsConfig, 'out=' + jsFile]);
-};
-
-target.buildcss = function() {
-    section('Building Less → ' + cssFile);
-    bin('lessc', ['--relative-urls', '--yui-compress', mainLessFile, cssFile]);
-    bin('imageinliner', ['-i ' + cssFile, '--overwrite', '--compress', '--rootPath src/webapp']);
-};
-
-target.buildimages = function() {
-    section('Copying resources ' + imageResourceFolder + ' → ' + targetDir);
-    cp('-r', imageResourceFolder, targetDir);
-
-    section('optimizing images');
-
-    var pngs = glob.sync(path.join(targetDir, '**', '*.png'), {nocase: true});
-    optimizePngImages(pngs);
-
-    var svgs = glob.sync(path.join(targetDir, '**', '*.svg'), {nocase: true});
-    optimizeSvgImages(svgs);
-};
-
-/*** APP FUNCTIONS ********/
-
-var renderAndWriteMustache = function(from, to, data) {
-    var mustache = fs.readFileSync(from).toString();
-    var template = hogan.compile(mustache);
-    var html = template.render(data);
-
-    fs.writeFileSync(to, html);
-
-    success();
-};
-
-
-/*** HELPER FUNCTIONS ********/
-
-// helper to call an NPM binary, which resides in node_modules/.bin/name
-// the rest of the arguments are used as space-separated arguments for the binary
-var bin = function(name, args, options) {
-    var res = npmBin(name, args, options);
-    done(res);
-}
-
-var optimizePngImages = function(pngs) {
-    if(pngs.length > 0) {
-        var res = exec('pngquant --force --speed 1 --ext .png -- ' + pngs.join(' '));
-        done(res);
-    }
-};
-
-var optimizeSvgImages = function(svgs) {
-    if(svgs.length > 0) {
-        svgs.forEach(function(svg) {
-            npmBin('svgo', svg, {silent: true});
-        });
-    }
-};
-
-var createCleanDir = function(dir) {
-    if (test('-d', dir)) {
-        rm('-rf', dir);
-    }
-
-    mkdir('-p', dir);
-
-    return dir;
-};
-
-var section = function(header) {
-    echo();
-    echo('    ' + header.bold);
-};
-
-var done = function(res) {
-    if (res.code === 0) {
-        success();
-    } else {
-        fail();
-    }
-};
-
-var success = function(text) {
-    text = text || 'done';
-    var s = isWin ? '»' : '✓';
-    echo('    ' + s.green + ' ' + text.green);
-};
-
-var fail = function(text) {
-    text = text || 'failed';
-    var s = isWin ? '×' : '✘';
-    echo('    ' + s.red + ' ' + text.red);
-    exit(1);
-};
-
+make.done();
