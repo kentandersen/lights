@@ -1,7 +1,5 @@
 define(function(require) {
 
-    var _ = require("underscore");
-    var $ = require("jquery");
     var View = require('base/view');
 
     // var UserDetailView = require('./userDetailView');
