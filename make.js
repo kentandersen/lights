@@ -8,6 +8,16 @@ var build = process.env.OUTPUT_DIR || path.join(__dirname, 'build', 'webapp');
 var webapp = path.join(__dirname, 'src', 'webapp');
 var config = path.join(__dirname, 'config');
 
+make.addGroup('test')
+
+    .addJob('jshint', 'jshint', {
+        files:      glob.sync(path.join(webapp, 'js', '**', '*.js')),
+        exclude:    path.join(webapp,'js', 'vendor/')
+    })
+
+    .addJob('js', 'karma', {
+        configFile: path.join(config, 'karma.conf.js')
+    });
 
 make.addGroup('build')
 
@@ -31,16 +41,6 @@ make.addGroup('build')
         outputDir:  path.join(build, 'images')
     });
 
-make.addGroup('test')
-
-    .addJob('jshint', 'jshint', {
-        files:      glob.sync(path.join(webapp, 'js', '**', '*.js')),
-        exclude:    path.join(webapp,'js', 'vendor/')
-    })
-
-    .addJob('js', 'karma', {
-        configFile: path.join(config, 'karma.conf.js')
-    });
 
 make.addGroup('util', { skip: true })
 
