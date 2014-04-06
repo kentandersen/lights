@@ -7,6 +7,9 @@ var telldus = require(isProcution ? "telldus" : "./mock/telldus.js");
 // populate all devices
 var devices = telldus.getDevicesSync();
 
+if(!isProcution) {
+    console.log("telldus started in mock mode");
+}
 
 
 exports.getDevices = function() {
