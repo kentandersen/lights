@@ -16,6 +16,13 @@ define(function(require) {
         },
 
         initialize: function(){
+            this.on("change:status", this.statusChangeHandler);
+        },
+
+        statusChangeHandler: function(model, value) {
+            this.save({
+                status: value
+            }, {patch: true});
         }
 
     });
