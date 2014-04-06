@@ -4,9 +4,9 @@ var path = require('path');
 var glob = require('glob');
 var make = require("make");
 
-var build = process.env.OUTPUT_DIR || path.join('build', 'webapp');
-var webapp = path.join('src', 'webapp');
-var config = path.join('config');
+var build = process.env.OUTPUT_DIR || path.join(__dirname, 'build', 'webapp');
+var webapp = path.join(__dirname, 'src', 'webapp');
+var config = path.join(__dirname, 'config');
 
 
 make.addGroup('build')
@@ -39,13 +39,13 @@ make.addGroup('test')
     })
 
     .addJob('js', 'karma', {
-        config:     path.join(config, 'karma.conf.js')
+        configFile: path.join(config, 'karma.conf.js')
     });
 
 make.addGroup('util', { skip: true })
 
     .addJob('testcont', 'karma', {
-        config:     path.join(config, 'karma.conf.js'),
+        configFile: path.join(config, 'karma.conf.js'),
         singleRun:  false,
         description: "Running js unit tests continuously on save"
     })
