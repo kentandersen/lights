@@ -38,7 +38,7 @@ var renderData;
 app.configure('development', function() {
     app.use(express.static(path.join(__dirname, "..", "webapp")));
     renderData = {
-        cssFile: "css/lights.less",
+        cssFile: "css/app.less",
         jsFiles: [
             "js/vendor/less.js",
             "js/vendor/require.js",
