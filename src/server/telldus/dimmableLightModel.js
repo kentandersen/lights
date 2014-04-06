@@ -14,6 +14,7 @@ var DimmableLightModel = LightModel.extend({
     parse: function(attr) {
         var returnObj = LightModel.prototype.parse.apply(this, arguments);
         returnObj.dimLevel = attr.status.level;
+        returnObj.isDimmable = true;
 
         return returnObj;
     },

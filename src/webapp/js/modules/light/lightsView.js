@@ -2,6 +2,7 @@ define(function(require) {
 
     var View = require("base/view");
     var LightItemView = require("./lightItemView");
+    var DimmableLightItemView = require("./dimmableLightItemView");
 
     var LightsView = View.extend({
 
@@ -21,7 +22,14 @@ define(function(require) {
 
         addToList: function(light, collection) {
 
-            var item = new LightItemView({
+            var View;
+            if(light.get("isDimmable")) {
+                View = DimmableLightItemView;
+            } else {
+                View = LightItemView;
+            }
+
+            var item = new View({
                 model: light
             });
             item.render();
