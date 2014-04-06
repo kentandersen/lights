@@ -16,7 +16,7 @@ define(function(require) {
 
         initialize: function(){
             LightItemView.prototype.initialize.apply(this, arguments);
-            this.dim = _.throttle(this.dim, 500, {leading: false}   );
+            this.dim = _.debounce(this.dim, 500);
         },
 
         dim: function(event) {
