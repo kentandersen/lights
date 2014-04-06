@@ -7,7 +7,7 @@ var DimmableLightModel = LightModel.extend({
 
     events: _.extend({
 
-        "changed:dimLevel": "dimLevelChangeHandler"
+        "change:dimLevel": "dimLevelChangeHandler"
 
     }, LightModel.prototype.events),
 
@@ -20,8 +20,7 @@ var DimmableLightModel = LightModel.extend({
     },
 
     dim: function(dimLevel) {
-        this.attributes.status = "DIM";
-        return telldusRepository.dim(this.id, dimLevel);
+        return telldusRepository.dimDevice(this.id, dimLevel);
     },
 
     dimLevelChangeHandler: function() {

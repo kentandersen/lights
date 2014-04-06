@@ -20,7 +20,7 @@ define(function(require) {
         },
 
         dim: function(event) {
-            var value = event.currentTarget.value;
+            var value = parseInt(event.currentTarget.value, 10);
             this.model.save("dimLevel", value, {patch: true});
         },
 
